@@ -5,18 +5,17 @@ using namespace std;
 typedef int Elem_type;//给数据类型起别名 增强可读性 方便后期修改数据类型
 
 typedef struct {
-	Elem_type data[MAXSIZE];//顺序表的存储空间 默认初始化 在栈中开辟一个100*400的空间
+	Elem_type* data;//顺序表的存储空间指针
 	int length;
 } SeqList;
 //函数作用：定义顺序表结构体 typedef是给结构体起别名，方便后期使用SeqList代替struct SeqList
 
-SeqList* initList(SeqList* L) {
-	SeqList* L = (SeqList*)malloc(sizeof(SeqList));
-	L->data = (Elem_type*)malloc(sizeof(Elem_type) * MAXSIZE);
+SeqList* initList() {
+	SeqList* L = (SeqList*)malloc(sizeof(SeqList));//在堆中开辟一个顺序表的空间
+	L->data = (Elem_type*)malloc(MAXSIZE * sizeof(Elem_type));//在堆中开辟一个顺序表的存储空间
 	L->length = 0;
 	return L;
-}
-
+}//函数作用：动态分配内存地址初始化
 //void initList(SeqList *L) {
 //	L->length = 0;
 //}//函数作用：初始化顺序表 赋值为0 传入参数为顺序表的地址（指针）
@@ -87,32 +86,33 @@ int findElem(SeqList* L, Elem_type e) {
 }//函数作用：在顺序表中查找指定元素的位置 传入参数为顺序表的地址（指针）和要查找的元素
 
 
-int main(int argc, char const *argv[]){
-	SeqList list;//声明一个顺序表变量
-	initList(&list);//传入顺序表的地址 &为取地址符号 进行初始化
-	cout << "顺序表初始化完成，当前长度为：" << list.length << endl;
-	cout << "目前占用的内存空间为" << sizeof(list.data) << "字节" << endl;
-	//sizeof(list.data)计算顺序表的存储空间大小，单位为字节
 
-	appendElem(&list, 10);//在顺序表末尾添加元素10
-	appendElem(&list, 20);//在顺序表末尾添加元素20
-	appendElem(&list, 30);//在顺序表末尾添加元素30
-	appendElem(&list, 40);//在顺序表末尾添加元素40
-	listElem(&list);//遍历顺序表中的元素并输出
-	insertElem(&list, 3, 25);//在顺序表的第3个位置插入元素25
-	listElem(&list);//遍历顺序表中的元素并输出
+int main(int argc, char const *argv[]){
+	SeqList* list = initList();//声明一个顺序表变量 在堆中开辟一个顺序表的空间 并将其地址赋值给list
+	cout << "顺序表初始化完成，当前长度为：" << list->length << endl;
+	cout << "目前占用的内存空间为" << sizeof(list->data) << "字节" << endl;
+	//sizeof(list->data)计算顺序表的存储空间大小，单位为字节
+
+	appendElem(list, 10);//在顺序表末尾添加元素10
+	appendElem(list, 20);//在顺序表末尾添加元素20
+	appendElem(list, 30);//在顺序表末尾添加元素30
+	appendElem(list, 40);//在顺序表末尾添加元素40
+	listElem(list);//遍历顺序表中的元素并输出
+	insertElem(list, 3, 25);//在顺序表的第3个位置插入元素25
+	listElem(list);//遍历顺序表中的元素并输出
 	Elem_type delete_data;
 	int locate;
 	cout << "请输入要删除的元素位置：";
 	cin >> locate;
-	deleteElem(&list, locate, &delete_data);//删除顺序表的第2个位置的元素
+	deleteElem(list, locate, &delete_data);//删除顺序表的第2个位置的元素
 	cout << "被删除的元素为：" << delete_data << endl;
-	listElem(&list);//遍历顺序表中的元素并输出 
+	listElem(list);//遍历顺序表中的元素并输出 
 	Elem_type find_data;
 	cout << "请输入要查找的元素：";
 	cin >> find_data;
-	cout << "查找的元素位置为第" << findElem(&list, find_data) << "位" << endl;
-	
+	cout << "查找的元素位置为第" << findElem(list, find_data) << "位" << endl;
+
+	delete list;//释放顺序表的存储空间
 
 	system("pause");
 	return 0;
